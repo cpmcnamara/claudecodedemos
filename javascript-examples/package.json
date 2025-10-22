@@ -1,0 +1,19 @@
+{
+  "name": "todo-cli-demo",
+  "version": "1.0.0",
+  "description": "A simple command-line todo application",
+  "main": "todo-cli.js",
+  "scripts": {
+    "start": "node todo-cli.js"
+  },
+  "keywords": [
+    "todo",
+    "cli",
+    "demo"
+  ],
+  "author": "Claude Code",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
