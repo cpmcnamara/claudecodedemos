@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Operations Dashboard - Hero Banner Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+        }
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(31, 35, 40, 0.95);
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .controls button {
+            background: #00E0FF;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px 0;
+            width: 100%;
+        }
+        .controls button:hover {
+            background: #00b8d4;
+        }
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 40px);
+        }
+        canvas {
+            border: 1px solid #1F2328;
+            box-shadow: 0 20px 60px rgba(0, 224, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h3 style="margin-bottom: 15px; font-size: 14px;">Export Banner</h3>
+        <button onclick="downloadBanner('dark')">Download Dark Theme</button>
+        <button onclick="downloadBanner('light')">Download Light Theme</button>
+        <button onclick="toggleAnimation()">Toggle Animation</button>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="heroCanvas" width="2560" height="1440"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationRunning = true;
+        let animationFrame = 0;
+
+        // Color palettes
+        const themes = {
+            dark: {
+                bg: '#0a0a0a',
+                bgGradient: '#1F2328',
+                primary: '#004B87',
+                accent: '#00E0FF',
+                warning: '#FFC857',
+                text: '#ffffff',
+                textSecondary: '#8b949e'
+            },
+            light: {
+                bg: '#f6f8fa',
+                bgGradient: '#ffffff',
+                primary: '#0969da',
+                accent: '#0969da',
+                warning: '#fb8500',
+                text: '#1F2328',
+                textSecondary: '#57606a'
+            }
+        };
+
+        let currentTheme = 'dark';
+
+        class DataPoint {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 3 + 1;
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = themes[currentTheme].accent + Math.floor(this.opacity * 255).toString(16).padStart(2, '0');
+                ctx.fill();
+            }
+        }
+
+        // Initialize data points
+        const dataPoints = [];
+        for (let i = 0; i < 150; i++) {
+            dataPoints.push(new DataPoint(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height
+            ));
+        }
+
+        function drawBackground() {
+            const theme = themes[currentTheme];
+
+            // Base gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, theme.bg);
+            gradient.addColorStop(0.5, theme.bgGradient);
+            gradient.addColorStop(1, theme.bg);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid lines
+            ctx.strokeStyle = theme.textSecondary + '15';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < canvas.width; i += 100) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+
+            for (let i = 0; i < canvas.height; i += 100) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+        }
+
+        function drawManufacturingLine() {
+            const theme = themes[currentTheme];
+            const centerY = canvas.height / 2;
+
+            // Conveyor belt representation
+            ctx.strokeStyle = theme.primary + '80';
+            ctx.lineWidth = 60;
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(100, centerY);
+            ctx.lineTo(canvas.width - 100, centerY);
+            ctx.stroke();
+
+            // Station points
+            const stations = 5;
+            const spacing = (canvas.width - 200) / (stations - 1);
+
+            for (let i = 0; i < stations; i++) {
+                const x = 100 + i * spacing;
+                const y = centerY;
+
+                // Station circle
+                ctx.beginPath();
+                ctx.arc(x, y, 40, 0, Math.PI * 2);
+                ctx.fillStyle = theme.bgGradient;
+                ctx.fill();
+                ctx.strokeStyle = theme.accent;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Pulsing effect
+                const pulse = Math.sin(animationFrame * 0.05 + i) * 10;
+                ctx.beginPath();
+                ctx.arc(x, y, 40 + pulse, 0, Math.PI * 2);
+                ctx.strokeStyle = theme.accent + '40';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Status indicator
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, Math.PI * 2);
+                ctx.fillStyle = i % 3 === 0 ? theme.warning : theme.accent;
+                ctx.fill();
+            }
+        }
+
+        function drawDataStreams() {
+            const theme = themes[currentTheme];
+
+            // Update and draw data points
+            dataPoints.forEach((point, index) => {
+                point.update();
+                point.draw();
+
+                // Connect nearby points
+                dataPoints.slice(index + 1).forEach(otherPoint => {
+                    const dx = point.x - otherPoint.x;
+                    const dy = point.y - otherPoint.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(point.x, point.y);
+                        ctx.lineTo(otherPoint.x, otherPoint.y);
+                        ctx.strokeStyle = theme.accent + Math.floor((1 - distance / 150) * 40).toString(16).padStart(2, '0');
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+        }
+
+        function drawHolographicPanels() {
+            const theme = themes[currentTheme];
+
+            // Left panel - Performance metrics
+            drawPanel(200, 200, 400, 300, 'PERFORMANCE', [
+                { label: 'Uptime', value: '98.7%', color: theme.accent },
+                { label: 'Quality', value: '99.2%', color: theme.accent },
+                { label: 'Efficiency', value: '94.5%', color: theme.warning }
+            ]);
+
+            // Right panel - AI Insights
+            drawPanel(canvas.width - 600, 200, 400, 300, 'AI INSIGHTS', [
+                { label: 'Anomalies Detected', value: '3', color: theme.warning },
+                { label: 'Recommendations', value: '12', color: theme.accent },
+                { label: 'Active Sensors', value: '247', color: theme.accent }
+            ]);
+
+            // Bottom panel - Supply chain flow
+            drawPanel(canvas.width / 2 - 300, canvas.height - 400, 600, 200, 'SUPPLY CHAIN STATUS', [
+                { label: 'On-Time Delivery', value: '96.3%', color: theme.accent },
+                { label: 'Inventory Health', value: 'Optimal', color: theme.accent }
+            ]);
+        }
+
+        function drawPanel(x, y, width, height, title, metrics) {
+            const theme = themes[currentTheme];
+
+            // Panel background with glass effect
+            ctx.fillStyle = theme.bgGradient + '40';
+            ctx.fillRect(x, y, width, height);
+
+            // Border glow
+            ctx.strokeStyle = theme.accent + '60';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, width, height);
+
+            // Title
+            ctx.fillStyle = theme.accent;
+            ctx.font = 'bold 18px Inter';
+            ctx.fillText(title, x + 20, y + 35);
+
+            // Title underline
+            ctx.strokeStyle = theme.accent;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x + 20, y + 45);
+            ctx.lineTo(x + 20 + ctx.measureText(title).width, y + 45);
+            ctx.stroke();
+
+            // Metrics
+            metrics.forEach((metric, index) => {
+                const metricY = y + 80 + index * 60;
+
+                ctx.fillStyle = theme.textSecondary;
+                ctx.font = '14px Inter';
+                ctx.fillText(metric.label, x + 20, metricY);
+
+                ctx.fillStyle = metric.color;
+                ctx.font = 'bold 28px Inter';
+                ctx.fillText(metric.value, x + 20, metricY + 30);
+            });
+        }
+
+        function drawTitle() {
+            const theme = themes[currentTheme];
+            const centerX = canvas.width / 2;
+            const titleY = 120;
+
+            // Main title
+            ctx.fillStyle = theme.text;
+            ctx.font = 'bold 80px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('AI OPERATIONS DASHBOARD', centerX, titleY);
+
+            // Subtitle
+            ctx.fillStyle = theme.accent;
+            ctx.font = '32px Inter';
+            ctx.fillText('Automotive Supply & Manufacturing Intelligence', centerX, titleY + 60);
+
+            // Tagline
+            ctx.fillStyle = theme.textSecondary;
+            ctx.font = '24px Inter';
+            ctx.fillText('Turning Data into Decisions', centerX, titleY + 100);
+
+            // Reset text align
+            ctx.textAlign = 'left';
+        }
+
+        function animate() {
+            if (animationRunning) {
+                drawBackground();
+                drawManufacturingLine();
+                drawDataStreams();
+                drawHolographicPanels();
+                drawTitle();
+
+                animationFrame++;
+                requestAnimationFrame(animate);
+            }
+        }
+
+        function toggleAnimation() {
+            animationRunning = !animationRunning;
+            if (animationRunning) {
+                animate();
+            }
+        }
+
+        function downloadBanner(theme) {
+            currentTheme = theme;
+            animationRunning = false;
+
+            // Render one frame with the selected theme
+            drawBackground();
+            drawManufacturingLine();
+            drawDataStreams();
+            drawHolographicPanels();
+            drawTitle();
+
+            // Download
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ai-operations-dashboard-hero-${theme}-2560x1440.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Resume animation
+                currentTheme = 'dark';
+                animationRunning = true;
+                animate();
+            });
+        }
+
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

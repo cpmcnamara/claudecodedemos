@@ -1,0 +1,41 @@
+{
+  "name": "AI Operations Dashboard",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "editor.formatOnSave": true,
+        "files.autoSave": "afterDelay"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+
+  "forwardPorts": [8501],
+
+  "portsAttributes": {
+    "8501": {
+      "label": "Streamlit Dashboard",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
+
+  "postStartCommand": "streamlit run app.py --server.port=8501 --server.address=0.0.0.0 --server.headless=true",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+
+  "remoteUser": "vscode"
+}

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operations Overview - AI Dashboard Mockup</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1F2328 0%, #0a0a0a 100%);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 224, 255, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #00E0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #8b949e;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.active {
+            background: #00E0FF;
+            box-shadow: 0 0 10px rgba(0, 224, 255, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(31, 35, 40, 0.6);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #00E0FF;
+            box-shadow: 0 8px 24px rgba(0, 224, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #00E0FF, #004B87);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .metric {
+            background: rgba(0, 224, 255, 0.05);
+            border: 1px solid rgba(0, 224, 255, 0.2);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #00E0FF;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-change {
+            font-size: 12px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            color: #00E0FF;
+        }
+
+        .metric-change.negative {
+            color: #FFC857;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 16px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, rgba(255, 200, 87, 0.1) 0%, rgba(255, 200, 87, 0.05) 100%);
+            border: 2px solid #FFC857;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .action-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            background: #FFC857;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .action-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFC857;
+        }
+
+        .action-content {
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .action-button {
+            background: #FFC857;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-button:hover {
+            background: #ffb627;
+            transform: scale(1.05);
+        }
+
+        .heatmap-container {
+            width: 100%;
+            height: 350px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #6e7681;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <div>
+                <h1>Operations Overview</h1>
+                <div class="timestamp" id="timestamp"></div>
+            </div>
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot active"></div>
+                    <span>Live Data Stream</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot active"></div>
+                    <span>AI Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric">
+                <div class="metric-label">Overall Equipment Effectiveness</div>
+                <div class="metric-value">87.3%</div>
+                <div class="metric-change positive">↑ 2.4% from last hour</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Active Machines</div>
+                <div class="metric-value">24/26</div>
+                <div class="metric-change positive">↑ 1 machine restored</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Quality Rate</div>
+                <div class="metric-value">98.7%</div>
+                <div class="metric-change positive">↑ 0.3% from target</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Downtime Events</div>
+                <div class="metric-value">3</div>
+                <div class="metric-change negative">↑ 1 new alert</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">
+                            <div class="card-icon">📊</div>
+                            Quality vs. Downtime Correlation
+                        </div>
+                        <div class="card-subtitle">Last 24 hours</div>
+                    </div>
+                </div>
+                <div class="chart-container" id="lineChart"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">
+                            <div class="card-icon">🎯</div>
+                            Machine Performance
+                        </div>
+                        <div class="card-subtitle">Current shift</div>
+                    </div>
+                </div>
+                <div class="chart-container" id="gaugeChart"></div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">
+                        <div class="card-icon">🔥</div>
+                        Correlation Heatmap by Machine
+                    </div>
+                    <div class="card-subtitle">Temperature vs. Pressure vs. Quality</div>
+                </div>
+            </div>
+            <div class="heatmap-container" id="heatmap"></div>
+        </div>
+
+        <div class="action-card">
+            <div class="action-header">
+                <div class="action-icon">⚡</div>
+                <div class="action-title">Where to Act Now</div>
+            </div>
+            <div class="action-content">
+                <strong>Machine #14</strong> shows elevated temperature (↑8°C) correlated with pressure drop (↓12 PSI).
+                Quality output declining by 3.2% over last 2 hours. AI recommendation: Schedule preventive maintenance within next 4 hours to avoid production impact.
+            </div>
+            <button class="action-button" onclick="alert('Action logged: Maintenance scheduled for Machine #14')">Schedule Maintenance</button>
+        </div>
+    </div>
+
+    <script>
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent =
+                `Last updated: ${now.toLocaleTimeString()} | ${now.toLocaleDateString()}`;
+        }
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        // Line Chart - Quality vs Downtime
+        const hours = Array.from({length: 24}, (_, i) => `${i}:00`);
+        const quality = [98.2, 98.5, 98.3, 97.8, 97.5, 98.1, 98.4, 98.6, 98.9, 98.7, 98.5, 98.3,
+                        98.8, 98.9, 99.1, 98.7, 98.4, 98.2, 98.5, 98.7, 98.9, 98.6, 98.7, 98.7];
+        const downtime = [0, 0, 5, 10, 15, 8, 3, 0, 0, 2, 5, 8,
+                         0, 0, 0, 3, 7, 10, 5, 2, 0, 2, 3, 3];
+
+        const lineTrace1 = {
+            x: hours,
+            y: quality,
+            name: 'Quality Rate (%)',
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: '#00E0FF', width: 3 },
+            marker: { size: 6 }
+        };
+
+        const lineTrace2 = {
+            x: hours,
+            y: downtime,
+            name: 'Downtime (min)',
+            type: 'scatter',
+            mode: 'lines+markers',
+            yaxis: 'y2',
+            line: { color: '#FFC857', width: 3 },
+            marker: { size: 6 }
+        };
+
+        const lineLayout = {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { family: 'Inter', color: '#8b949e' },
+            xaxis: {
+                gridcolor: '#30363d',
+                showline: false
+            },
+            yaxis: {
+                title: 'Quality Rate (%)',
+                gridcolor: '#30363d',
+                showline: false,
+                titlefont: { color: '#00E0FF' },
+                tickfont: { color: '#00E0FF' }
+            },
+            yaxis2: {
+                title: 'Downtime (min)',
+                overlaying: 'y',
+                side: 'right',
+                gridcolor: 'transparent',
+                showline: false,
+                titlefont: { color: '#FFC857' },
+                tickfont: { color: '#FFC857' }
+            },
+            legend: {
+                x: 0.02,
+                y: 0.98,
+                bgcolor: 'rgba(31, 35, 40, 0.8)',
+                bordercolor: '#30363d',
+                borderwidth: 1
+            },
+            margin: { l: 60, r: 60, t: 20, b: 40 }
+        };
+
+        Plotly.newPlot('lineChart', [lineTrace1, lineTrace2], lineLayout, { responsive: true, displayModeBar: false });
+
+        // Gauge Chart
+        const gaugeTrace = {
+            type: "indicator",
+            mode: "gauge+number+delta",
+            value: 87.3,
+            delta: { reference: 85, increasing: { color: "#00E0FF" } },
+            gauge: {
+                axis: { range: [null, 100], tickwidth: 1, tickcolor: "#8b949e" },
+                bar: { color: "#00E0FF" },
+                bgcolor: "transparent",
+                borderwidth: 2,
+                bordercolor: "#30363d",
+                steps: [
+                    { range: [0, 50], color: "rgba(255, 200, 87, 0.2)" },
+                    { range: [50, 75], color: "rgba(0, 75, 135, 0.2)" },
+                    { range: [75, 100], color: "rgba(0, 224, 255, 0.2)" }
+                ],
+                threshold: {
+                    line: { color: "#FFC857", width: 4 },
+                    thickness: 0.75,
+                    value: 90
+                }
+            }
+        };
+
+        const gaugeLayout = {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { family: 'Inter', color: '#ffffff', size: 16 },
+            margin: { l: 20, r: 20, t: 20, b: 20 }
+        };
+
+        Plotly.newPlot('gaugeChart', [gaugeTrace], gaugeLayout, { responsive: true, displayModeBar: false });
+
+        // Heatmap
+        const machines = ['M01', 'M02', 'M03', 'M04', 'M05', 'M06', 'M07', 'M08', 'M09', 'M10',
+                         'M11', 'M12', 'M13', 'M14', 'M15', 'M16', 'M17', 'M18', 'M19', 'M20'];
+        const metrics = ['Temp-Press', 'Temp-Quality', 'Press-Quality', 'Vibration-Quality'];
+
+        const zValues = [
+            [0.8, 0.7, 0.6, 0.5, 0.7, 0.8, 0.9, 0.6, 0.5, 0.7, 0.8, 0.6, 0.5, 0.9, 0.7, 0.6, 0.8, 0.7, 0.6, 0.5],
+            [0.6, 0.5, 0.7, 0.8, 0.6, 0.7, 0.8, 0.5, 0.6, 0.8, 0.7, 0.5, 0.6, 0.95, 0.8, 0.7, 0.6, 0.8, 0.7, 0.6],
+            [0.7, 0.8, 0.6, 0.7, 0.8, 0.6, 0.7, 0.6, 0.7, 0.6, 0.8, 0.7, 0.6, 0.92, 0.6, 0.8, 0.7, 0.6, 0.8, 0.7],
+            [0.5, 0.6, 0.7, 0.6, 0.5, 0.7, 0.6, 0.7, 0.8, 0.7, 0.6, 0.8, 0.7, 0.88, 0.7, 0.6, 0.5, 0.7, 0.6, 0.8]
+        ];
+
+        const heatmapTrace = {
+            x: machines,
+            y: metrics,
+            z: zValues,
+            type: 'heatmap',
+            colorscale: [
+                [0, '#004B87'],
+                [0.5, '#00E0FF'],
+                [1, '#FFC857']
+            ],
+            showscale: true,
+            colorbar: {
+                title: 'Correlation',
+                titleside: 'right',
+                tickmode: 'linear',
+                tick0: 0,
+                dtick: 0.2,
+                tickfont: { color: '#8b949e' },
+                titlefont: { color: '#ffffff' },
+                bgcolor: 'rgba(31, 35, 40, 0.8)',
+                bordercolor: '#30363d',
+                borderwidth: 1
+            }
+        };
+
+        const heatmapLayout = {
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            font: { family: 'Inter', color: '#8b949e' },
+            xaxis: {
+                side: 'bottom',
+                gridcolor: '#30363d'
+            },
+            yaxis: {
+                gridcolor: '#30363d'
+            },
+            margin: { l: 120, r: 80, t: 20, b: 60 }
+        };
+
+        Plotly.newPlot('heatmap', [heatmapTrace], heatmapLayout, { responsive: true, displayModeBar: false });
+    </script>
+</body>
+</html>

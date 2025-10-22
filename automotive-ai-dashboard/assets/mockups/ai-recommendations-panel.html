@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recommendations Panel - Dashboard Mockup</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1F2328 0%, #0a0a0a 100%);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 224, 255, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #00E0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ai-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 224, 255, 0.1);
+            border: 1px solid rgba(0, 224, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #00E0FF;
+        }
+
+        .ai-badge::before {
+            content: "✨";
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .summary-section {
+            background: rgba(0, 224, 255, 0.05);
+            border: 1px solid rgba(0, 224, 255, 0.2);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00E0FF;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-value.critical { color: #FFC857; }
+        .stat-value.warning { color: #ffb627; }
+        .stat-value.normal { color: #00E0FF; }
+
+        .stat-label {
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recommendations-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .recommendation-card {
+            background: rgba(31, 35, 40, 0.6);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 20px;
+        }
+
+        .recommendation-card:hover {
+            border-color: #00E0FF;
+            box-shadow: 0 8px 24px rgba(0, 224, 255, 0.15);
+            transform: translateX(4px);
+        }
+
+        .recommendation-card.critical {
+            border-left: 4px solid #FFC857;
+            background: rgba(255, 200, 87, 0.03);
+        }
+
+        .recommendation-card.warning {
+            border-left: 4px solid #ffb627;
+            background: rgba(255, 182, 39, 0.03);
+        }
+
+        .recommendation-card.info {
+            border-left: 4px solid #00E0FF;
+            background: rgba(0, 224, 255, 0.03);
+        }
+
+        .recommendation-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .recommendation-icon.critical {
+            background: rgba(255, 200, 87, 0.2);
+            border: 2px solid #FFC857;
+        }
+
+        .recommendation-icon.warning {
+            background: rgba(255, 182, 39, 0.2);
+            border: 2px solid #ffb627;
+        }
+
+        .recommendation-icon.info {
+            background: rgba(0, 224, 255, 0.2);
+            border: 2px solid #00E0FF;
+        }
+
+        .recommendation-content {
+            flex: 1;
+        }
+
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .recommendation-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .recommendation-description {
+            color: #c9d1d9;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .recommendation-metrics {
+            display: flex;
+            gap: 20px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #8b949e;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .recommendation-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn.primary {
+            background: #00E0FF;
+            color: #0a0a0a;
+        }
+
+        .action-btn.primary:hover {
+            background: #00b8d4;
+            transform: scale(1.05);
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: #8b949e;
+            border: 1px solid #30363d;
+        }
+
+        .action-btn.secondary:hover {
+            color: #ffffff;
+            border-color: #8b949e;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-badge.high {
+            background: rgba(255, 200, 87, 0.2);
+            color: #FFC857;
+            border: 1px solid #FFC857;
+        }
+
+        .priority-badge.medium {
+            background: rgba(255, 182, 39, 0.2);
+            color: #ffb627;
+            border: 1px solid #ffb627;
+        }
+
+        .priority-badge.low {
+            background: rgba(0, 224, 255, 0.2);
+            color: #00E0FF;
+            border: 1px solid #00E0FF;
+        }
+
+        .chat-input-container {
+            position: sticky;
+            bottom: 0;
+            background: rgba(31, 35, 40, 0.95);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #00E0FF;
+            box-shadow: 0 0 0 2px rgba(0, 224, 255, 0.1);
+        }
+
+        .chat-input::placeholder {
+            color: #6e7681;
+        }
+
+        .send-btn {
+            background: #00E0FF;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #00b8d4;
+            transform: scale(1.05);
+        }
+
+        .timestamp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #6e7681;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #004B87, #00E0FF);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <div>
+                <h1>AI Recommendations</h1>
+                <div class="timestamp" id="timestamp"></div>
+            </div>
+            <div class="ai-badge">
+                AI Engine Active
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <div class="summary-title">
+                <span>📊</span>
+                Current Analysis Summary
+            </div>
+            <div class="summary-stats">
+                <div class="stat">
+                    <div class="stat-value critical">3</div>
+                    <div class="stat-label">Critical Anomalies</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value warning">7</div>
+                    <div class="stat-label">Active Recommendations</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value normal">247</div>
+                    <div class="stat-label">Sensors Monitored</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value normal">96.8%</div>
+                    <div class="stat-label">Model Confidence</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendations-container">
+            <!-- Critical Recommendation -->
+            <div class="recommendation-card critical">
+                <div class="recommendation-icon critical">⚠️</div>
+                <div class="recommendation-content">
+                    <div class="recommendation-header">
+                        <div>
+                            <div class="recommendation-title">Machine #14: Temperature-Pressure Correlation Anomaly</div>
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <span>🕐</span>
+                                    <span>Detected 18 minutes ago</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span>📍</span>
+                                    <span>Assembly Line B</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="priority-badge high">High Priority</span>
+                    </div>
+
+                    <div class="recommendation-description">
+                        Machine #14 shows rising temperature pattern (+8°C over 2 hours) strongly correlated with pressure drop (-12 PSI).
+                        Historical data indicates this pattern precedes bearing failure with 94% confidence.
+                        Quality output has declined by 3.2% in the last hour. Immediate preventive maintenance recommended to avoid unplanned downtime.
+                    </div>
+
+                    <div class="recommendation-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Temperature Δ</div>
+                            <div class="metric-value" style="color: #FFC857;">+8°C</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Pressure Δ</div>
+                            <div class="metric-value" style="color: #FFC857;">-12 PSI</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Quality Impact</div>
+                            <div class="metric-value" style="color: #FFC857;">-3.2%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Failure Risk</div>
+                            <div class="metric-value" style="color: #FFC857;">94%</div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-actions">
+                        <button class="action-btn primary" onclick="takeAction('schedule-maintenance', 'M14')">
+                            <span>🔧</span>
+                            Schedule Maintenance
+                        </button>
+                        <button class="action-btn secondary" onclick="viewDetails('M14')">
+                            View Details
+                        </button>
+                        <button class="action-btn secondary" onclick="dismiss('M14')">
+                            Dismiss
+                        </button>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 94%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warning Recommendation -->
+            <div class="recommendation-card warning">
+                <div class="recommendation-icon warning">🔔</div>
+                <div class="recommendation-content">
+                    <div class="recommendation-header">
+                        <div>
+                            <div class="recommendation-title">Supply Chain: Delayed Shipment Impact Forecast</div>
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <span>🕐</span>
+                                    <span>1 hour ago</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span>📦</span>
+                                    <span>Parts Inventory</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="priority-badge medium">Medium Priority</span>
+                    </div>
+
+                    <div class="recommendation-description">
+                        Shipment delay of critical components (ETA +36 hours) will impact production capacity in 3 days.
+                        AI model predicts 18% capacity reduction if no alternative sourcing is secured.
+                        Recommend activating backup supplier or adjusting production schedule.
+                    </div>
+
+                    <div class="recommendation-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Delay Time</div>
+                            <div class="metric-value" style="color: #ffb627;">+36 hrs</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Impact Start</div>
+                            <div class="metric-value" style="color: #ffb627;">3 days</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Capacity Risk</div>
+                            <div class="metric-value" style="color: #ffb627;">-18%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Confidence</div>
+                            <div class="metric-value" style="color: #00E0FF;">87%</div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-actions">
+                        <button class="action-btn primary" onclick="takeAction('alternative-supplier', 'SC01')">
+                            <span>📞</span>
+                            Contact Backup Supplier
+                        </button>
+                        <button class="action-btn secondary" onclick="viewDetails('SC01')">
+                            View Forecast
+                        </button>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 87%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Recommendation -->
+            <div class="recommendation-card info">
+                <div class="recommendation-icon info">💡</div>
+                <div class="recommendation-content">
+                    <div class="recommendation-header">
+                        <div>
+                            <div class="recommendation-title">Optimization Opportunity: Machine #07 Efficiency Improvement</div>
+                            <div class="recommendation-meta">
+                                <div class="meta-item">
+                                    <span>🕐</span>
+                                    <span>2 hours ago</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span>📈</span>
+                                    <span>Performance Optimization</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="priority-badge low">Low Priority</span>
+                    </div>
+
+                    <div class="recommendation-description">
+                        Machine #07 operating parameters show potential for 5.3% efficiency gain by adjusting feed rate and spindle speed.
+                        Similar optimization on Machine #09 resulted in 4.8% efficiency improvement with no quality impact.
+                        Recommended trial during next maintenance window.
+                    </div>
+
+                    <div class="recommendation-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Efficiency Gain</div>
+                            <div class="metric-value" style="color: #00E0FF;">+5.3%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Quality Risk</div>
+                            <div class="metric-value" style="color: #00E0FF;">None</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Similar Case</div>
+                            <div class="metric-value" style="color: #00E0FF;">+4.8%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Confidence</div>
+                            <div class="metric-value" style="color: #00E0FF;">91%</div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-actions">
+                        <button class="action-btn primary" onclick="takeAction('schedule-optimization', 'M07')">
+                            <span>⚙️</span>
+                            Schedule Optimization Trial
+                        </button>
+                        <button class="action-btn secondary" onclick="viewDetails('M07')">
+                            View Parameters
+                        </button>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 91%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <div style="margin-bottom: 8px; font-size: 14px; color: #8b949e;">
+                💬 Ask AI about anomalies, request analysis, or get recommendations
+            </div>
+            <div class="chat-input-wrapper">
+                <input type="text" class="chat-input" placeholder="e.g., 'Why is Machine #14 showing this pattern?' or 'Show me similar historical cases'">
+                <button class="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent =
+                `Last updated: ${now.toLocaleTimeString()} | ${now.toLocaleDateString()}`;
+        }
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        // Action handlers
+        function takeAction(action, target) {
+            alert(`Action: ${action} for ${target}\nThis would trigger the corresponding workflow in the actual system.`);
+        }
+
+        function viewDetails(target) {
+            alert(`Viewing detailed analysis for ${target}\nThis would open a detailed view with historical data and trends.`);
+        }
+
+        function dismiss(target) {
+            if (confirm(`Dismiss recommendation for ${target}?`)) {
+                alert('Recommendation dismissed and logged.');
+            }
+        }
+
+        // Chat input functionality
+        document.querySelector('.chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                alert(`AI Query: "${this.value}"\n\nIn a live system, this would trigger the AI to analyze your question and provide detailed insights.`);
+                this.value = '';
+            }
+        });
+
+        document.querySelector('.send-btn').addEventListener('click', function() {
+            const input = document.querySelector('.chat-input');
+            if (input.value.trim()) {
+                alert(`AI Query: "${input.value}"\n\nIn a live system, this would trigger the AI to analyze your question and provide detailed insights.`);
+                input.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

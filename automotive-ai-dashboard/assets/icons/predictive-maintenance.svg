@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base wrench shape -->
+  <path d="M44 8C44 8 44 12 40 16L28 28L36 36L48 24C52 20 56 20 56 20C56 20 56 16 52 12C48 8 44 8 44 8Z" stroke="#00E0FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Wrench handle -->
+  <path d="M28 28L12 44C10 46 8 48 8 52C8 56 12 56 12 56C16 56 18 54 20 52L36 36L28 28Z" stroke="#00E0FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Predictive wave indicators -->
+  <path d="M18 14C20 14 20 18 22 18" stroke="#FFC857" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M24 10C26 10 26 14 28 14" stroke="#FFC857" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M30 8C32 8 32 12 34 12" stroke="#FFC857" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- 3D depth effect -->
+  <circle cx="32" cy="32" r="4" fill="#00E0FF" opacity="0.3"/>
+
+  <!-- Alert indicator -->
+  <circle cx="52" cy="12" r="3" fill="#FFC857" stroke="#0a0a0a" stroke-width="1.5"/>
+</svg>
