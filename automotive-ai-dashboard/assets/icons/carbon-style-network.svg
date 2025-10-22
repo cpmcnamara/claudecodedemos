@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Carbon Design System Style Network Icon -->
+  <circle cx="16" cy="8" r="3" fill="none" stroke="#33b1ff" stroke-width="1.5"/>
+  <circle cx="8" cy="20" r="3" fill="none" stroke="#33b1ff" stroke-width="1.5"/>
+  <circle cx="24" cy="20" r="3" fill="none" stroke="#33b1ff" stroke-width="1.5"/>
+  <circle cx="16" cy="26" r="3" fill="none" stroke="#33b1ff" stroke-width="1.5"/>
+  <line x1="16" y1="11" x2="16" y2="23" stroke="#33b1ff" stroke-width="1.5"/>
+  <line x1="14" y1="9" x2="10" y2="18" stroke="#33b1ff" stroke-width="1.5"/>
+  <line x1="18" y1="9" x2="22" y2="18" stroke="#33b1ff" stroke-width="1.5"/>
+</svg>

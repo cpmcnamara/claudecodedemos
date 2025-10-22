@@ -28,6 +28,43 @@ from scipy.stats import pearsonr
 import re
 
 # ============================================================================
+# CARBON DESIGN SYSTEM - DATA VISUALIZATION COLORS
+# ============================================================================
+
+# Carbon Charts color palette (12-color system)
+CARBON_COLORS = {
+    'purple': '#8a3ffc',    # Primary data viz color
+    'cyan': '#33b1ff',      # Secondary
+    'teal': '#007d79',      # Tertiary
+    'magenta': '#ff7eb6',   # Accent 1
+    'red': '#fa4d56',       # Accent 2
+    'pink': '#fff1f1',      # Accent 3
+    'green': '#6fdc8c',     # Success
+    'blue': '#4589ff',      # Info
+    'deep_pink': '#d12771', # Critical
+    'gold': '#d2a106',      # Warning
+    'aqua': '#08bdba',      # Highlight 1
+    'sky_blue': '#bae6ff',  # Highlight 2
+}
+
+# Sequential colors for gradients/heatmaps
+CARBON_SEQUENTIAL = ['#002d9c', '#0043ce', '#0f62fe', '#4589ff', '#78a9ff']
+
+# Main palette for charts (order optimized for contrast)
+CARBON_PALETTE = [
+    CARBON_COLORS['purple'],     # #8a3ffc
+    CARBON_COLORS['cyan'],       # #33b1ff
+    CARBON_COLORS['teal'],       # #007d79
+    CARBON_COLORS['magenta'],    # #ff7eb6
+    CARBON_COLORS['red'],        # #fa4d56
+    CARBON_COLORS['green'],      # #6fdc8c
+    CARBON_COLORS['blue'],       # #4589ff
+    CARBON_COLORS['deep_pink'],  # #d12771
+    CARBON_COLORS['gold'],       # #d2a106
+    CARBON_COLORS['aqua'],       # #08bdba
+]
+
+# ============================================================================
 # PAGE CONFIGURATION
 # ============================================================================
 
@@ -44,135 +81,221 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    /* === CARBON DESIGN SYSTEM - GRAY 100 THEME === */
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+    /* Carbon Design Tokens */
+    :root {
+        /* Backgrounds (Layer System) */
+        --cds-background: #161616;
+        --cds-layer-01: #262626;
+        --cds-layer-02: #393939;
+        --cds-layer-03: #525252;
+
+        /* UI Elements */
+        --cds-border-subtle: #393939;
+        --cds-border-strong: #8d8d8d;
+        --cds-border-interactive: #4589ff;
+
+        /* Text */
+        --cds-text-primary: #f4f4f4;
+        --cds-text-secondary: #c6c6c6;
+        --cds-text-placeholder: #6f6f6f;
+        --cds-text-on-color: #ffffff;
+        --cds-text-inverse: #161616;
+
+        /* Interactive */
+        --cds-blue-40: #78a9ff;
+        --cds-blue-50: #4589ff;
+        --cds-blue-60: #0f62fe;
+        --cds-blue-70: #0043ce;
+        --cds-blue-80: #002d9c;
+        --cds-button-primary: #0f62fe;
+        --cds-button-primary-hover: #0353e9;
+        --cds-button-primary-active: #002d9c;
+        --cds-focus: #0f62fe;
+
+        /* Support Colors */
+        --cds-support-error: #ff8389;
+        --cds-support-success: #42be65;
+        --cds-support-warning: #f1c21b;
+        --cds-support-info: #4589ff;
+
+        /* Spacing (2px base) */
+        --cds-spacing-02: 0.25rem;    /* 4px */
+        --cds-spacing-03: 0.5rem;     /* 8px */
+        --cds-spacing-04: 0.75rem;    /* 12px */
+        --cds-spacing-05: 1rem;       /* 16px */
+        --cds-spacing-06: 1.5rem;     /* 24px */
+        --cds-spacing-07: 2rem;       /* 32px */
+
+        /* Typography */
+        --cds-font-sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+        --cds-font-mono: 'IBM Plex Mono', 'Menlo', 'Courier New', monospace;
+
+        /* Motion */
+        --cds-duration-fast-02: 110ms;
+        --cds-duration-moderate-02: 240ms;
+        --cds-ease-standard: cubic-bezier(0.5, 0, 0.1, 1);
+    }
 
     /* Main app styling */
     .stApp {
-        background: linear-gradient(135deg, #101216 0%, #1F2328 100%);
-        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, var(--cds-background) 0%, var(--cds-layer-01) 100%);
+        font-family: var(--cds-font-sans);
+        color: var(--cds-text-primary);
     }
 
     /* Headers */
     h1, h2, h3 {
-        font-family: 'Inter', sans-serif;
-        font-weight: 800;
-        letter-spacing: -0.5px;
+        font-family: var(--cds-font-sans);
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--cds-text-primary);
+    }
+
+    h1 {
+        font-size: 2.625rem;  /* 42px - Carbon heading-06 */
+        line-height: 1.25;
+    }
+
+    h2 {
+        font-size: 2rem;      /* 32px - Carbon heading-05 */
+        line-height: 1.25;
+    }
+
+    h3 {
+        font-size: 1.75rem;   /* 28px - Carbon heading-04 */
+        line-height: 1.25;
     }
 
     /* Metric cards */
     [data-testid="stMetricValue"] {
-        font-size: 32px;
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: 700;
-        color: #00E0FF;
+        font-size: 2rem;      /* 32px */
+        font-family: var(--cds-font-mono);
+        font-weight: 600;
+        color: var(--cds-blue-50);
     }
 
     [data-testid="stMetricLabel"] {
-        font-size: 14px;
+        font-size: 0.75rem;   /* 12px - Carbon label-01 */
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #8b949e;
+        letter-spacing: 0.32px;
+        color: var(--cds-text-secondary);
+        font-weight: 400;
     }
 
     /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: rgba(31, 35, 40, 0.6);
-        padding: 8px;
-        border-radius: 8px;
+        gap: var(--cds-spacing-02);
+        background-color: var(--cds-layer-01);
+        padding: var(--cds-spacing-03);
+        border-radius: 0.5rem;  /* 8px */
     }
 
     .stTabs [data-baseweb="tab"] {
-        padding: 12px 24px;
-        font-weight: 600;
-        border-radius: 6px;
-        color: #8b949e;
+        padding: var(--cds-spacing-04) var(--cds-spacing-06);
+        font-weight: 400;
+        border-radius: 0.25rem;  /* 4px - Carbon border-radius-md */
+        color: var(--cds-text-secondary);
+        transition: background var(--cds-duration-fast-02) var(--cds-ease-standard);
     }
 
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #00E0FF 0%, #004B87 100%);
-        color: #ffffff;
+        background: var(--cds-blue-60);
+        color: var(--cds-text-on-color);
+        border-bottom: 2px solid var(--cds-blue-40);
     }
 
     /* Cards */
     .dashboard-card {
-        background: rgba(31, 35, 40, 0.6);
-        border: 1px solid #30363d;
-        border-radius: 8px;
-        padding: 24px;
-        margin: 12px 0;
+        background: var(--cds-layer-01);
+        border: 1px solid var(--cds-border-subtle);
+        border-radius: 0.5rem;  /* 8px */
+        padding: var(--cds-spacing-06);
+        margin: var(--cds-spacing-04) 0;
         backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
+        transition: all var(--cds-duration-moderate-02) var(--cds-ease-standard);
     }
 
     .dashboard-card:hover {
-        border-color: #00E0FF;
-        box-shadow: 0 8px 24px rgba(0, 224, 255, 0.15);
+        border-color: var(--cds-border-interactive);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
     /* Alert boxes */
     .alert-critical {
-        background: rgba(255, 200, 87, 0.1);
-        border-left: 4px solid #FFC857;
-        padding: 16px;
-        border-radius: 6px;
-        margin: 12px 0;
+        background: rgba(241, 194, 27, 0.1);
+        border-left: 4px solid var(--cds-support-warning);
+        padding: var(--cds-spacing-05);
+        border-radius: 0.25rem;  /* 4px */
+        margin: var(--cds-spacing-04) 0;
     }
 
     .alert-info {
-        background: rgba(0, 224, 255, 0.1);
-        border-left: 4px solid #00E0FF;
-        padding: 16px;
-        border-radius: 6px;
-        margin: 12px 0;
+        background: rgba(69, 137, 255, 0.1);
+        border-left: 4px solid var(--cds-support-info);
+        padding: var(--cds-spacing-05);
+        border-radius: 0.25rem;  /* 4px */
+        margin: var(--cds-spacing-04) 0;
     }
 
     /* Chat messages */
     .chat-message {
-        padding: 16px;
-        border-radius: 8px;
-        margin: 8px 0;
-        animation: slideIn 0.3s ease;
+        padding: var(--cds-spacing-05);
+        border-radius: 0.5rem;  /* 8px */
+        margin: var(--cds-spacing-03) 0;
+        animation: slideIn 240ms var(--cds-ease-standard);
     }
 
     .chat-user {
-        background: rgba(0, 224, 255, 0.1);
-        border-left: 3px solid #00E0FF;
+        background: rgba(69, 137, 255, 0.1);
+        border-left: 3px solid var(--cds-blue-50);
     }
 
     .chat-agent {
-        background: rgba(31, 35, 40, 0.8);
-        border-left: 3px solid #FFC857;
+        background: var(--cds-layer-02);
+        border-left: 3px solid var(--cds-support-warning);
     }
 
     @keyframes slideIn {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(16px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
     /* Code blocks */
     code {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--cds-font-mono);
         background: rgba(0, 0, 0, 0.4);
         padding: 2px 6px;
-        border-radius: 4px;
-        color: #00E0FF;
+        border-radius: 0.25rem;  /* 4px */
+        color: var(--cds-blue-40);
+        font-size: 0.875rem;  /* 14px */
     }
 
     /* Buttons */
     .stButton > button {
-        background: #00E0FF;
-        color: #0a0a0a;
-        font-weight: 600;
-        border-radius: 6px;
+        background: var(--cds-button-primary);
+        color: var(--cds-text-on-color);
+        font-weight: 400;
+        border-radius: 0.25rem;  /* 4px */
         border: none;
-        padding: 8px 24px;
-        transition: all 0.2s;
+        padding: var(--cds-spacing-04) var(--cds-spacing-06);
+        transition: background var(--cds-duration-fast-02) var(--cds-ease-standard);
     }
 
     .stButton > button:hover {
-        background: #00b8d4;
-        transform: scale(1.05);
+        background: var(--cds-button-primary-hover);
+    }
+
+    .stButton > button:active {
+        background: var(--cds-button-primary-active);
+    }
+
+    /* Focus indicators (WCAG AAA) */
+    *:focus-visible {
+        outline: 2px solid var(--cds-focus);
+        outline-offset: 2px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -817,12 +940,12 @@ def main():
                 y=hourly_oee['oee'],
                 mode='lines',
                 name='OEE',
-                line=dict(color='#00E0FF', width=2),
+                line=dict(color=CARBON_COLORS['purple'], width=2),
                 fill='tozeroy',
-                fillcolor='rgba(0, 224, 255, 0.1)'
+                fillcolor='rgba(138, 63, 252, 0.1)'
             ))
 
-            fig.add_hline(y=85, line_dash="dash", line_color="#FFC857",
+            fig.add_hline(y=85, line_dash="dash", line_color=CARBON_COLORS['gold'],
                          annotation_text="Target: 85%")
 
             fig.update_layout(
@@ -830,7 +953,7 @@ def main():
                 template="plotly_dark",
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(family="Inter"),
+                font=dict(family="IBM Plex Sans", color='#c6c6c6'),
                 hovermode='x unified',
                 height=350
             )
@@ -850,7 +973,7 @@ def main():
                 y=hourly_quality['yield_rate'],
                 mode='lines',
                 name='Yield Rate',
-                line=dict(color='#00E0FF', width=2)
+                line=dict(color=CARBON_COLORS['cyan'], width=2)
             ))
 
             fig.add_trace(go.Scatter(
@@ -858,7 +981,7 @@ def main():
                 y=hourly_quality['defect_rate'],
                 mode='lines',
                 name='Defect Rate',
-                line=dict(color='#FFC857', width=2),
+                line=dict(color=CARBON_COLORS['red'], width=2),
                 yaxis='y2'
             ))
 
@@ -867,7 +990,7 @@ def main():
                 template="plotly_dark",
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(family="Inter"),
+                font=dict(family="IBM Plex Sans", color='#c6c6c6'),
                 hovermode='x unified',
                 height=350,
                 yaxis=dict(title="Yield Rate (%)"),
@@ -892,14 +1015,14 @@ def main():
             name='OEE',
             x=plant_perf['plant_id'],
             y=plant_perf['oee'],
-            marker_color='#00E0FF'
+            marker_color=CARBON_COLORS['purple']
         ))
 
         fig.add_trace(go.Bar(
             name='Yield',
             x=plant_perf['plant_id'],
             y=plant_perf['yield_rate'],
-            marker_color='#004B87'
+            marker_color=CARBON_COLORS['cyan']
         ))
 
         fig.update_layout(
@@ -907,7 +1030,7 @@ def main():
             template="plotly_dark",
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(family="Inter"),
+            font=dict(family="IBM Plex Sans", color='#c6c6c6'),
             height=350
         )
 
@@ -934,13 +1057,13 @@ def main():
                 size='downtime',
                 hover_data=['machine_id', 'shift'],
                 template='plotly_dark',
-                color_discrete_sequence=['#00E0FF', '#FFC857', '#004B87']
+                color_discrete_sequence=[CARBON_COLORS['purple'], CARBON_COLORS['cyan'], CARBON_COLORS['teal']]
             )
 
             fig.update_layout(
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(family="Inter"),
+                font=dict(family="IBM Plex Sans", color='#c6c6c6'),
                 height=400
             )
 
@@ -967,13 +1090,14 @@ def main():
                 color='supplier_id',
                 size='energy_consumption',
                 hover_data=['machine_id', 'shift'],
-                template='plotly_dark'
+                template='plotly_dark',
+                color_discrete_sequence=CARBON_PALETTE[:5]
             )
 
             fig.update_layout(
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(family="Inter"),
+                font=dict(family="IBM Plex Sans", color='#c6c6c6'),
                 height=400
             )
 
@@ -996,9 +1120,9 @@ def main():
             x=corr_matrix.columns,
             y=corr_matrix.columns,
             colorscale=[
-                [0, '#004B87'],
-                [0.5, '#1F2328'],
-                [1, '#FFC857']
+                [0, CARBON_COLORS['blue']],
+                [0.5, '#262626'],  # Carbon layer-01
+                [1, CARBON_COLORS['gold']]
             ],
             zmid=0,
             text=corr_matrix.values,
@@ -1011,7 +1135,7 @@ def main():
             template="plotly_dark",
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(family="Inter"),
+            font=dict(family="IBM Plex Sans", color='#c6c6c6'),
             height=500
         )
 
@@ -1083,9 +1207,9 @@ def main():
                 size='temperature_std',
                 hover_data=['machine_id', 'oee_mean'],
                 color_discrete_map={
-                    'Stable': '#00E0FF',
-                    'At-Risk': '#FFC857',
-                    'Critical': '#ff4444'
+                    'Stable': CARBON_COLORS['green'],
+                    'At-Risk': CARBON_COLORS['gold'],
+                    'Critical': CARBON_COLORS['red']
                 },
                 template='plotly_dark',
                 labels={
@@ -1097,7 +1221,7 @@ def main():
             fig.update_layout(
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(family="Inter"),
+                font=dict(family="IBM Plex Sans", color='#c6c6c6'),
                 height=450
             )
 

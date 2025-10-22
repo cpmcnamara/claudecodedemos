@@ -140,21 +140,32 @@ docker run -p 8501:8501 ai-operations-dashboard
 
 ---
 
-## 🎨 Design System
+## 🎨 Design System - Built on IBM Carbon
 
-### Color Palette
-- **Background:** Graphite `#101216`, Slate `#1F2328`
-- **Primary:** Electric Cyan `#00E0FF`
-- **Accent:** Steel Blue `#004B87`
-- **Alert:** Amber `#FFC857`
+This dashboard leverages **IBM Carbon Design System** - the world-class design system used by IBM Cloud, Watson, and enterprise products globally.
+
+### Carbon Features
+- ✅ **Gray 100 Dark Theme** - Professional, enterprise-grade appearance
+- ✅ **IBM Plex Typography** - Clear, readable fonts optimized for data
+- ✅ **WCAG AAA Accessibility** - Best-in-class compliance
+- ✅ **2px Spacing System** - Mathematical precision for layouts
+- ✅ **12-Color Data Viz Palette** - Optimized for charts and graphs
+
+### Key Colors
+- **Background:** Carbon Gray 100 `#161616`
+- **Cards/Tiles:** Carbon Layer-01 `#262626`
+- **Primary Interactive:** Carbon Blue 60 `#0f62fe`
+- **Data Viz:** Purple `#8a3ffc`, Cyan `#33b1ff`, Teal `#007d79`, etc.
+- **Alerts:** Warning `#f1c21b`, Error `#ff8389`, Success `#42be65`
 
 ### Typography
-- **Headings:** Inter ExtraBold
-- **Body:** Inter Regular
-- **Metrics:** JetBrains Mono (monospace)
+- **Headings:** IBM Plex Sans (400 weight, Carbon type scale)
+- **Body:** IBM Plex Sans Regular (16px)
+- **Metrics/Code:** IBM Plex Mono
 
 ### Visual Style
-- Dark industrial aesthetic
+- Carbon Gray 100 dark theme
+- 2px base spacing system for precision
 - Consulting-grade polish
 - Inspired by: Siemens Mindsphere, Tesla factory UI, Apple Design System
 
